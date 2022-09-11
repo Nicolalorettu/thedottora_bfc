@@ -89,6 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
   List <double> checkfemaleweightmax = [0,120,129.1,106.1,88.2];
   List <double> checkfemaleheightmin = [0,141.8,142.5,136.5,141.4];
   List <double> checkfemaleheightmax = [0,183,182,171.5,173.5];
+  //List <double> constantsmsjmale = [10,6.25,5,5];
+  //List <double> constantsmsjfemale = [10,6.25,5,161];
+  //List <double> constantsrhbmale = [13.397,4.799,5.677,88.362];
+  //List <double> constantsrhbfemale = [9.247,3.089,4.330,447.593];
+  List <double> constantskmunisex = [370,21.6,1];
   String? _dropdowngender;
   List<String> genders = ['Sesso','Uomo', 'Donna'];
   String? _dropdownrace;
@@ -129,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Shadow(color: Colors.white24, offset: Offset(5,4), blurRadius:10)
         ] ),widget.title)),
       ),
-
+      drawer: const NavigationDrawer(),
       body: SingleChildScrollView(
 
 
@@ -723,5 +728,65 @@ class _MyHomePageState extends State<MyHomePage> {
     ],
     );
   }
-
+}
+class NavigationDrawer extends StatelessWidget{
+  const NavigationDrawer({Key? key}) : super();
+  @override
+  Widget build(BuildContext context) =>Container(
+      alignment: Alignment(-1,-0.8),
+      child: SizedBox(
+          height: MediaQuery.of(context).size.height /1.9,
+  child: Drawer(
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(32.0)),
+        side: BorderSide(color: Colors.cyan, width: 5.0)),
+    child: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          buildHeader(context),
+          buildMenuItems(context),
+        ],
+      ),
+    ),
+  )));
+  Widget buildHeader(BuildContext context) => Container(
+    padding: EdgeInsets.only(
+      //top: MediaQuery.of(context).padding.top,
+    )
+  );
+  Widget buildMenuItems(BuildContext context) => Container(
+    padding: const EdgeInsets.all(24),
+    child: Wrap(
+    runSpacing: 16,
+    children: [
+      ListTile(
+        leading: const Icon(Icons.home_outlined),
+        title: const Text('Home'),
+        onTap:() =>
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const TdBfc(),)),
+      ),
+      ListTile(
+        leading: const Icon(Icons.app_registration),
+        title: const Text('Parametri Paziente'),
+        onTap:(){},
+      ),
+      ListTile(
+        leading: const Icon(Icons.accessibility_new_outlined),
+        title: const Text('Calcolo Grasso Corporeo'),
+        onTap:(){},
+      ),
+      ListTile(
+        leading: const Icon(Icons.timeline_outlined),
+        title: const Text('Calcolo Metabolismo Basale'),
+        onTap:(){},
+      ),
+      const Divider(color: Colors.black45),
+      ListTile(
+        leading: const Icon(Icons.settings_power_outlined),
+        title: const Text('Esci'),
+        onTap:(){},
+      )
+    ],
+  ));
 }
