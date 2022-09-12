@@ -634,52 +634,69 @@ class _parametri extends State<parametri> {
                           }
                         }
                         equation = ((log(parameters![0])/ln10)*constants[0])+(parameters![1]*constants[1])+(parameters![2]*constants[2])+(parameters![3]*constants[3])+(parameters![4]*constants[4])+(constants[5]);
-
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                                side: BorderSide(color: Colors.cyan, width: 5.0)),
-                            contentPadding: const EdgeInsets.symmetric(vertical:15.0, horizontal:30.0),
-                            //contentPadding: EdgeInsets.only(top: 10.0),
-                            title: const Center(child:Text(style: TextStyle(color: Colors.cyan),'Calcolo Grasso Corporeo')),
-                            content: Text('Durnin Womersley: ' + equation!.toStringAsFixed(1)+' %' +'\n'+ '\n'+ 'Circonferenze: '+equationbcm!.toStringAsFixed(1)+' %' +'\n'+ '\n'+ 'Bioimpedenziometria: '+bioimpedanceanalysis.text+' %',),
-
+                            title: const Text('Conferma Dati'),
+                            content: const Text('Procedendo accetti i parametri appena inseriti, continuare?'),
                             actions: <Widget>[
-                              SizedBox(
-
-                                  child: Row(
-
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () => {Navigator.pop(context, 'Reset'),Phoenix.rebirth(context)},
-                                          child: const Text('Ricomincia'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () => {Navigator.pop(context, 'OK')},
-                                          child: const Text('OK'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {Navigator.pop(context, 'Download');PdfBFR.generate(parametersf!, equation!.toStringAsFixed(1),equationbcm!.toStringAsFixed(1),bioimpedanceanalysis.text,namepatient.text );
-                                          //print(await PdfApi.checkFile());
-                                          if(await PdfApi.checkFile() == true){
-                                            const snackBar = SnackBar(
-                                              content: Text('Download completato in: Download/BFC'),
-                                            );
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snackBar);}},
-                                          child: const Text('Scarica PDF'),
-                                        ),
-                                      ])
-                              )
-
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => {Navigator.pop(context, 'OK'),NavigationDrawer.visible = true,NavigationDrawer.paramvisible = false, NavigationDrawer.delvisible = true,Navigator.pushNamed(context, '/')},
+                                child: const Text('OK'),
+                              ),
                             ],
-
                           ),
                         );
+
+                        //showDialog<String>(
+                        //  context: context,
+                        //  builder: (BuildContext context) => AlertDialog(
+
+                        //    shape: RoundedRectangleBorder(
+                        //        borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                        //        side: BorderSide(color: Colors.cyan, width: 5.0)),
+                        //    contentPadding: const EdgeInsets.symmetric(vertical:15.0, horizontal:30.0),
+                        //    //contentPadding: EdgeInsets.only(top: 10.0),
+                        //    title: const Center(child:Text(style: TextStyle(color: Colors.cyan),'Calcolo Grasso Corporeo')),
+                        //    content: Text('Durnin Womersley: ' + equation!.toStringAsFixed(1)+' %' +'\n'+ '\n'+ 'Circonferenze: '+equationbcm!.toStringAsFixed(1)+' %' +'\n'+ '\n'+ 'Bioimpedenziometria: '+bioimpedanceanalysis.text+' %',),
+
+                         //   actions: <Widget>[
+                              //SizedBox(
+
+                                  //child: Row(
+
+                                    //  mainAxisAlignment: MainAxisAlignment.center,
+                                    //  children: [
+                                    //    TextButton(
+                                    //      onPressed: () => {Navigator.pop(context, 'Reset'),Phoenix.rebirth(context)},
+                                    //      child: const Text('Ricomincia'),
+                                    //    ),
+                                    //    TextButton(
+                                    //      onPressed: () => {Navigator.pop(context, 'OK')},
+                                    //      child: const Text('OK'),
+                                    //    ),
+                                    //    TextButton(
+                                    //      onPressed: () async {Navigator.pop(context, 'Download');PdfBFR.generate(parametersf!, equation!.toStringAsFixed(1),equationbcm!.toStringAsFixed(1),bioimpedanceanalysis.text,namepatient.text );
+                                    //      //print(await PdfApi.checkFile());
+                                    //      if(await PdfApi.checkFile() == true){
+                                    //        const snackBar = SnackBar(
+                                    //          content: Text('Download completato in: Download/BFC'),
+                                    //        );
+                                    //        ScaffoldMessenger.of(context)
+                                    //            .showSnackBar(snackBar);}},
+                                    //      child: const Text('Scarica PDF'),
+                                    //    ),
+                                    //  ])
+                              //)
+
+                           // ],
+
+                          //),
+                        //);
 
                       };
 
@@ -694,5 +711,7 @@ class _parametri extends State<parametri> {
       ],
     );
   }
+
+
 }
 

@@ -40,7 +40,7 @@ class TdBfc extends StatelessWidget {
         primarySwatch: Colours.darkTurquoise,
 
       ),
-      //initialRoute: '/',
+      initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         //'/': (context) => const TdBfc(),
@@ -60,9 +60,11 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
+
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   @override
 
   Widget build(BuildContext context) {
@@ -120,12 +122,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   }
 class NavigationDrawer extends StatelessWidget{
+  static bool visible = false;
+  static bool delvisible = false;
+  static bool paramvisible = true;
+
   const NavigationDrawer({Key? key}) : super();
   @override
   Widget build(BuildContext context) =>Container(
       alignment: Alignment(-1,-0.8),
+
       child: SizedBox(
-          height: MediaQuery.of(context).size.height /1.9,
+          height: visible != false ? MediaQuery.of(context).size.height /1.9 : MediaQuery.of(context).size.height /2.8,
   child: Drawer(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(32.0)),
@@ -149,6 +156,7 @@ class NavigationDrawer extends StatelessWidget{
     padding: const EdgeInsets.all(24),
     child: Wrap(
     runSpacing: 16,
+
     children: [
       ListTile(
         leading: const Icon(Icons.home_outlined),
@@ -156,23 +164,41 @@ class NavigationDrawer extends StatelessWidget{
         onTap:() =>
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const TdBfc(),)),
       ),
+      Visibility(
+      visible: paramvisible,
+      child:
       ListTile(
         leading: const Icon(Icons.app_registration),
         title: const Text('Parametri Paziente'),
         onTap:()=>{
-          Navigator.pop(context),
+            Navigator.pop(context),
             Navigator.pushNamed(context, '/second'),},
-      ),
+      ),),
+      Visibility(
+        visible: delvisible,
+        child:
+      ListTile(
+        leading: const Icon(Icons.app_registration),
+        title: const Text('Cancella Parametri'),
+        onTap:()=>{
+          Navigator.pop(context),delvisible = false, paramvisible = true, visible = false},
+      ),),
+      Visibility(
+        visible: visible,
+        child:
       ListTile(
         leading: const Icon(Icons.accessibility_new_outlined),
         title: const Text('Calcolo Grasso Corporeo'),
         onTap:(){},
-      ),
+      ),),
+      Visibility(
+        visible: visible,
+        child:
       ListTile(
         leading: const Icon(Icons.timeline_outlined),
         title: const Text('Calcolo Metabolismo Basale'),
         onTap:(){},
-      ),
+      ),),
       const Divider(color: Colors.black45),
       ListTile(
         leading: const Icon(Icons.settings_power_outlined),
