@@ -28,11 +28,10 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
     List<String> data = file.readAsLinesSync();
     return data;
   }
-  TextEditingController grassocorporeo = TextEditingController();
+  TextEditingController grassocorporeo = TextEditingController(text: '0');
   List<double> KatchMcArdleFormula(){
     var bmr = constantskmunisex[0]+(constantskmunisex[1]*(constantskmunisex[2]-(double.parse(grassocorporeo.text)/100)))*double.parse(loaddata()[0]);
-    print(bmr);
-    List<double> bmractivity = [];
+    List<double> bmractivity= [];
     bmractivity.add(bmr);
     for(int i =0; i<multiplierbmr.length; i++){
       bmractivity.add(bmr*multiplierbmr[i]);
@@ -89,6 +88,19 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
               child:(
                   TextField(
                     controller: grassocorporeo,
+                    onEditingComplete: (){
+                      if(grassocorporeo.text.isEmpty )  {
+                        grassocorporeo.text='0';
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        const snackBar = SnackBar(
+                          content: Text('Parametro errato o nullo'),
+                        );
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(snackBar);
+                      }else{
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      }
+                    },
                     obscureText: false,
                     decoration: InputDecoration(
                       filled: true,
@@ -150,11 +162,11 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                     //Shadow(color: Colors.greenAccent, offset: Offset(2,1), blurRadius:20)
                     //]
                     ),
-                    "BMR = " +KatchMcArdleFormula()![0].toStringAsFixed(0)+" Calorie/giorno"),
+                    "BMR ="+KatchMcArdleFormula()[0].toStringAsFixed(0)+ "Calorie/giorno"),
 
                     ),
               Container(
-                margin: EdgeInsets.symmetric(vertical:30.0, horizontal:30.0),
+                margin: EdgeInsets.symmetric(vertical:20.0, horizontal:30.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.all(
@@ -172,38 +184,38 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                       //color: MaterialStateProperty.all(Colors.cyan),
                         cells: [
                           DataCell(Text('Sedentario: poco o nessun workout:', style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black))),
-                          DataCell(Text(KatchMcArdleFormula()![1].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
+                          DataCell(Text(KatchMcArdleFormula()[1].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
                         ]),
                     DataRow(
                       //color: MaterialStateProperty.all(Colors.lightBlueAccent),
                         cells: [
                           DataCell(Text('Workout 1-3 volte/settimana:',style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black))),
-                          DataCell(Text(KatchMcArdleFormula()![2].toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
+                          DataCell(Text(KatchMcArdleFormula()[2].toStringAsFixed(0), style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
                         ]),
                     DataRow(
                       //color: MaterialStateProperty.all(Colors.cyan),
                         cells: [
                           DataCell(Text('Workout 4-5 volte/settimana:',style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black))),
-                          DataCell(Text(KatchMcArdleFormula()![3].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
+                          DataCell(Text(KatchMcArdleFormula()[3].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
                         ]),
                     DataRow(
                       //color: MaterialStateProperty.all(Colors.cyan),
 
                         cells: [
                           DataCell(Text('Esercizi ogni dì o workout intensi 3-4 volte/settimana:',style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black))),
-                          DataCell(Text(KatchMcArdleFormula()![4].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
+                          DataCell(Text(KatchMcArdleFormula()[4].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
                         ]),
                     DataRow(
                       //color: MaterialStateProperty.all(Colors.cyan),
                         cells: [
                           DataCell(Text('Workout intensi 6-7 volte/settimana:',style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black))),
-                          DataCell(Text(KatchMcArdleFormula()![5].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
+                          DataCell(Text(KatchMcArdleFormula()[5].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
                         ]),
                     DataRow(
                       //color: MaterialStateProperty.all(Colors.cyan),
                         cells: [
                           DataCell(Text('Workout intensi ogni dì o lavoro fisico:',style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black))),
-                          DataCell(Text(KatchMcArdleFormula()![6].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
+                          DataCell(Text(KatchMcArdleFormula()[6].toStringAsFixed(0),style: TextStyle(fontWeight: FontWeight.w500,fontStyle: FontStyle.italic, color: Colors.black))),
                         ]),
                   ],
                 ),
