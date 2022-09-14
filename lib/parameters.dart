@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:colours/colours.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'dart:math';
-import 'package:pdf/pdf.dart';
-import 'package:thedottora_bfc/api/pdf_api.dart';
-import 'package:thedottora_bfc/api/pdfBodyFatResult.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:thedottora_bfc/main.dart';
 import 'package:thedottora_bfc/parameters.dart';
+import 'package:flutter/foundation.dart';
 
 
 class parametri extends StatefulWidget {
@@ -32,7 +30,9 @@ class _parametri extends State<parametri> {
   TextEditingController hips = TextEditingController();
   TextEditingController waist = TextEditingController();
   TextEditingController bioimpedanceanalysis = TextEditingController();
-  TextEditingController namepatient = TextEditingController();
+  //1.0b obsolete variable//
+  //TextEditingController namepatient = TextEditingController();
+  //final pdf = pw.Document();
   List <double> costantsmalecaucasian =[23.81, 0.07, -0.134,0.12, 0.038, -13.011];
   List <double> costantsfemalecaucasian =[22.712, 0.07, -0.182,0.296, 0.013, -4.409];
   List <double> constantsmaleafro =[22.708, 0.065, -0.08, 0.043, 0.156, -26.806];
@@ -42,24 +42,25 @@ class _parametri extends State<parametri> {
   List <double> constantsmaleasian =[13.832, 0.02, -0.21, 0.081, 0.289, -0.65];
   List <double> constantsfemaleasian =[21.43, 0.036, -0.149, 0.241, 0.067, -7.525];
   List <double> noconst = [0,0,0,0,0,0];
+  //maledata//
   double checkmaleagemin = 18;
   List <double> checkmaleagemax = [0,96,107,84,87];
   List <double> checkmaleweightmin = [0,50.9,49.3,47.1,46.5];
   List <double> checkmaleweightmax = [0,130.0,133.4,123.5,90.5];
   List <double> checkmaleheightmin = [0,153,151.8,141.5,157.1];
   List <double> checkmaleheightmax = [0,198.4,200,189.5,185.1];
-
+  //femaledata//
   List <double> checkfemaleagemin = [0,18,18,20,18];
   List <double> checkfemaleagemax = [0,91,94,110,88];
   List <double> checkfemaleweightmin = [0,40.6,45.8,39,36.7];
   List <double> checkfemaleweightmax = [0,120,129.1,106.1,88.2];
   List <double> checkfemaleheightmin = [0,141.8,142.5,136.5,141.4];
   List <double> checkfemaleheightmax = [0,183,182,171.5,173.5];
+  //2.1b variables//
   //List <double> constantsmsjmale = [10,6.25,5,5];
   //List <double> constantsmsjfemale = [10,6.25,5,161];
   //List <double> constantsrhbmale = [13.397,4.799,5.677,88.362];
   //List <double> constantsrhbfemale = [9.247,3.089,4.330,447.593];
-  List <double> constantskmunisex = [370,21.6,1];
   String? _dropdowngender;
   List<String> genders = ['Sesso','Uomo', 'Donna'];
   String? _dropdownrace;
@@ -70,8 +71,8 @@ class _parametri extends State<parametri> {
   List<double> constantsbcm = [];
   double? equation;
   double? equationbcm;
-  final pdf = pw.Document();
-  final file = File("example.pdf");
+  int? counterrace;
+    //final file = File("data.txt");
   FocusNode myFocusNode = new FocusNode();
 
   List _setdata() {
@@ -79,7 +80,42 @@ class _parametri extends State<parametri> {
     var constantfemalematrix = List.generate(1,(j) => [noconst,costantsfemalecaucasian, constantsfemaleafro,constantsfemalehispanic, constantsfemaleasian], growable: false);
     return [constantmalematrix,constantfemalematrix];
   }
+  static Directory getDirPath() {
+    final appDocumentsDirectory  = Directory('/storage/emulated/0/Download/Nutritool');
+    return appDocumentsDirectory;
+  }
+  static Future<String> getFilePath() async {
+    final appDocumentsDirectory  = Directory('/storage/emulated/0/Download/Nutritool'); // 1
+    String appDocumentsPath = appDocumentsDirectory.path; // 2
+    String filePath = '$appDocumentsPath/data.txt'; // 3
 
+    return filePath;
+  }
+  void saveFile() async {
+    if (await _requestPermission(Permission.storage)) {
+      if (!await getDirPath().exists()) {
+        await getDirPath().create(recursive: true);
+        File file = File(await getFilePath());
+        file.writeAsString(weight.text+'\n'+equation!.toStringAsFixed(1)+' %' +'\n'+equationbcm!.toStringAsFixed(1)+' %' +'\n'+bioimpedanceanalysis.text+' %'); // 2
+      }else{
+        File file = File(await getFilePath());
+        file.writeAsString(weight.text+'\n'+equation!.toStringAsFixed(1)+' %' +'\n'+equationbcm!.toStringAsFixed(1)+' %' +'\n'+bioimpedanceanalysis.text+' %'); // 2
+      }
+    }
+     // 1
+
+  }
+  static Future<bool> _requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   @override
 
@@ -129,36 +165,37 @@ class _parametri extends State<parametri> {
                       "Parametri Paziente"),
 
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical:10.0, horizontal:30.0),
-                  child: TextField(
-                    controller: namepatient,
+                //1.0b obsolete container//
+               // Container(
+               //   margin: EdgeInsets.symmetric(vertical:10.0, horizontal:30.0),
+               //   child: TextField(
+               //     controller: namepatient,
 
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: const OutlineInputBorder(
+               //     obscureText: false,
+               //     decoration: InputDecoration(
+               //         filled: true,
+               //         fillColor: Colors.white,
+               //         enabledBorder: const OutlineInputBorder(
                           // width: 0.0 produces a thin "hairline" border
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: const BorderSide(color: Colors.cyan, width: 1.0),
-                        ),
-                        border: OutlineInputBorder(),
-                        contentPadding: const EdgeInsets.symmetric(vertical:18.0, horizontal:10.0),
-                        labelText: 'Nome e Cognome',
-                        labelStyle: TextStyle(
-                          color: myFocusNode.hasFocus ? Colors.black45 : Colors.black45,
-                          backgroundColor: myFocusNode.hasFocus ? Colors.white : Colors.white,
-                        )
-                    ),
+               //           borderRadius: BorderRadius.all(Radius.circular(10)),
+               //           borderSide: const BorderSide(color: Colors.cyan, width: 1.0),
+               //         ),
+               //         border: OutlineInputBorder(),
+               //         contentPadding: const EdgeInsets.symmetric(vertical:18.0, horizontal:10.0),
+               //         labelText: 'Nome e Cognome',
+               //         labelStyle: TextStyle(
+               //           color: myFocusNode.hasFocus ? Colors.black45 : Colors.black45,
+               //           backgroundColor: myFocusNode.hasFocus ? Colors.white : Colors.white,
+               //         )
+               //     ),
                     //keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    minLines: 1,
+               //     textAlign: TextAlign.center,
+               //     maxLines: 1,
+               //     minLines: 1,
 
-                  ),
+               //   ),
 
-                ),
+               // ),
 
                 Container(
                   margin: EdgeInsets.symmetric(vertical:40.0, horizontal:30.0),
@@ -619,6 +656,7 @@ class _parametri extends State<parametri> {
                               break;
                             }
                           }
+
                           parameters = [(double.parse(biceps.text)+double.parse(triceps.text)+double.parse(subscapular.text)+double.parse(supralliac.text)),double.parse(age.text),double.parse(height.text),double.parse(weight.text),double.parse(waist.text),double.parse(hips.text),double.parse(neck.text)];
                           parametersf = [double.parse(biceps.text),double.parse(triceps.text),double.parse(subscapular.text),double.parse(supralliac.text),double.parse(age.text),double.parse(height.text),double.parse(weight.text),double.parse(waist.text),double.parse(hips.text),double.parse(neck.text)];
                           if(_dropdowngender == genders[1].toString() && _dropdownrace == races[i].toString()){
@@ -634,6 +672,7 @@ class _parametri extends State<parametri> {
                           }
                         }
                         equation = ((log(parameters![0])/ln10)*constants[0])+(parameters![1]*constants[1])+(parameters![2]*constants[2])+(parameters![3]*constants[3])+(parameters![4]*constants[4])+(constants[5]);
+
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
@@ -645,12 +684,17 @@ class _parametri extends State<parametri> {
                                 child: const Text('Cancel'),
                               ),
                               TextButton(
-                                onPressed: () => {Navigator.pop(context, 'OK'),NavigationDrawer.visible = true,NavigationDrawer.paramvisible = false, NavigationDrawer.delvisible = true,Navigator.pushNamed(context, '/')},
+                                onPressed: () => {Navigator.pop(context, 'OK'),NavigationDrawer.visible = true,NavigationDrawer.paramvisible = false, NavigationDrawer.delvisible = true,saveFile(),Navigator.pushNamed(context, '/')},
                                 child: const Text('OK'),
                               ),
                             ],
                           ),
                         );
+
+                        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        //Nella versione 1.0b la parte a seguire creava un popup con i risultati e la possibilità di salvarli in un file pdf.//
+                        // Ora è del tutto obsoleto. Lo script lo lascio nel caso dovesse servire in futuro.                                 //
+                        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         //showDialog<String>(
                         //  context: context,

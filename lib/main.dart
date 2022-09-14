@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:colours/colours.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'dart:math';
-import 'package:pdf/pdf.dart';
-import 'package:thedottora_bfc/api/pdf_api.dart';
-import 'package:thedottora_bfc/api/pdfBodyFatResult.dart';
+//old pdf imports//
+//import 'package:pdf/pdf.dart';
+//import 'package:thedottora_bfc/api/pdf_api.dart';
+//import 'package:thedottora_bfc/api/pdfBodyFatResult.dart';
 import 'package:thedottora_bfc/parameters.dart';
-import 'package:pdf/widgets.dart' as pw;
+import 'package:thedottora_bfc/Calcolo_grasso_corporeo.dart';
+import 'package:thedottora_bfc/Calcolo_Metabolismo_basale.dart';
+//import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
@@ -42,10 +45,9 @@ class TdBfc extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        //'/': (context) => const TdBfc(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
         '/second': (context) => const parametri(),
+        '/third': (context) => const calcolograssocorporeo(),
+        '/fourth': (context) => const calcolometabolismobasale(),
       },
       home: const MyHomePage(title: 'NutriTool 2.0b'),
     );
@@ -189,7 +191,9 @@ class NavigationDrawer extends StatelessWidget{
       ListTile(
         leading: const Icon(Icons.accessibility_new_outlined),
         title: const Text('Calcolo Grasso Corporeo'),
-        onTap:(){},
+        onTap:(){
+          Navigator.pop(context);
+          Navigator.pushNamed(context, '/third');},
       ),),
       Visibility(
         visible: visible,
@@ -197,7 +201,8 @@ class NavigationDrawer extends StatelessWidget{
       ListTile(
         leading: const Icon(Icons.timeline_outlined),
         title: const Text('Calcolo Metabolismo Basale'),
-        onTap:(){},
+        onTap:(){Navigator.pop(context);
+        Navigator.pushNamed(context, '/fourth');},
       ),),
       const Divider(color: Colors.black45),
       ListTile(
