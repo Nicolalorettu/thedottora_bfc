@@ -15,18 +15,19 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:flutter/services.dart';
 
 
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.removeAfter(initialization);
+  //FlutterNativeSplash.removeAfter(initialization);
   runApp(Phoenix(child:const TdBfc()));
 }
 
-Future initialization(BuildContext? context) async{
-  await Future.delayed(Duration(seconds:3));
-}
+//Future initialization(BuildContext? context) async{
+//  await Future.delayed(Duration(seconds:3));
+//}
 
 class TdBfc extends StatelessWidget {
 
@@ -37,22 +38,22 @@ class TdBfc extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'The Dottora BFC',
-      theme: ThemeData(
-        primarySwatch: Colours.darkTurquoise,
+    return
+          MaterialApp(
+            title: 'The Dottora BFC',
+            theme: ThemeData(
+              primarySwatch: Colours.darkTurquoise,
 
-      ),
-      initialRoute: '/',
-      routes: {
-        '/second': (context) => const parametri(),
-        '/third': (context) => const calcolograssocorporeo(),
-        '/fourth': (context) => const calcolometabolismobasale(),
-      },
-      home: const MyHomePage(title: 'NutriTool 2.0b'),
-    );
+            ),
+            initialRoute: '/',
+            routes: {
+              '/second': (context) => const parametri(),
+              '/third': (context) => const calcolograssocorporeo(),
+              '/fourth': (context) => const calcolometabolismobasale(),
+            },
+            home: const MyHomePage(title: 'NutriTool 2.0b'),
+          );
   }
-
 }
 
 class MyHomePage extends StatefulWidget {
@@ -69,8 +70,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
 
-  Widget build(BuildContext context) {
-    return Stack(
+  Widget build(BuildContext context) => WillPopScope(
+    onWillPop:() async{
+      return false;
+    },child:
+     Stack(
       children: <Widget>[
     Image.asset(
     "assets/images/Carta.jpg",
@@ -120,9 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
         ),
     ]
-    );
+    )
+  );
   }
-  }
+
 class NavigationDrawer extends StatelessWidget{
   static bool visible = false;
   static bool delvisible = false;
@@ -164,7 +169,11 @@ class NavigationDrawer extends StatelessWidget{
         leading: const Icon(Icons.home_outlined),
         title: const Text('Home'),
         onTap:() =>
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const TdBfc(),)),
+        {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const TdBfc(),)),
+        //Navigator.pushNamed(context, '/'),
+        }
       ),
       Visibility(
       visible: paramvisible,
@@ -183,6 +192,7 @@ class NavigationDrawer extends StatelessWidget{
         leading: const Icon(Icons.app_registration),
         title: const Text('Cancella Parametri'),
         onTap:()=>{
+
           Navigator.pop(context),delvisible = false, paramvisible = true, visible = false},
       ),),
       Visibility(
@@ -208,7 +218,9 @@ class NavigationDrawer extends StatelessWidget{
       ListTile(
         leading: const Icon(Icons.settings_power_outlined),
         title: const Text('Esci'),
-        onTap:(){},
+        onTap:(){
+          SystemNavigator.pop();
+        },
       )
     ],
   ));

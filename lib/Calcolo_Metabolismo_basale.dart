@@ -30,7 +30,12 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
   }
   TextEditingController grassocorporeo = TextEditingController(text: '0');
   List<double> KatchMcArdleFormula(){
-    var bmr = constantskmunisex[0]+(constantskmunisex[1]*(constantskmunisex[2]-(double.parse(grassocorporeo.text)/100)))*double.parse(loaddata()[0]);
+    double bmr = 0;
+    if(double.parse(grassocorporeo.text)!=0){
+      bmr = constantskmunisex[0]+(constantskmunisex[1]*(constantskmunisex[2]-(double.parse(grassocorporeo.text)/100)))*double.parse(loaddata()[0]);
+    }else{
+      bmr = 0;
+    }
     List<double> bmractivity= [];
     bmractivity.add(bmr);
     for(int i =0; i<multiplierbmr.length; i++){
@@ -101,6 +106,11 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                         FocusManager.instance.primaryFocus?.unfocus();
                       }
                     },
+                    onSubmitted: (value) {
+                      setState(() {
+                        visible = true;
+                      });
+                    },
                     obscureText: false,
                     decoration: InputDecoration(
                       filled: true,
@@ -126,18 +136,18 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                   )
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal:100.0),
-              child: ElevatedButton(
-                  onPressed: () => {
-                  setState(() {
-                  visible = true;
-                  }),
+            //Padding(
+            //  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal:100.0),
+            //  child: ElevatedButton(
+            //      onPressed: () => {
+            //      setState(() {
+            //      visible = true;
+            //      }),
 
-                  },
-                child: const Text('Calcola BMR',style: TextStyle(color: Colors.white)),
-              ),
-            ),
+            //      },
+            //    child: const Text('Calcola BMR',style: TextStyle(color: Colors.white)),
+            //  ),
+           // ),
             Visibility(
               visible: visible,
               child:
@@ -162,7 +172,7 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                     //Shadow(color: Colors.greenAccent, offset: Offset(2,1), blurRadius:20)
                     //]
                     ),
-                    "BMR ="+KatchMcArdleFormula()[0].toStringAsFixed(0)+ "Calorie/giorno"),
+                    "BMR = "+KatchMcArdleFormula()[0].toStringAsFixed(0)+ " Calorie/giorno"),
 
                     ),
               Container(
