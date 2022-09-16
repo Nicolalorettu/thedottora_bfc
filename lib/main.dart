@@ -51,7 +51,7 @@ class TdBfc extends StatelessWidget {
               '/third': (context) => const calcolograssocorporeo(),
               '/fourth': (context) => const calcolometabolismobasale(),
             },
-            home: const MyHomePage(title: 'NutriTool 2.0c'),
+            home: const MyHomePage(title: 'NutriTool 2.1c'),
           );
   }
 }
