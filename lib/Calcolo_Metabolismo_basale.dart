@@ -117,9 +117,21 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                       }
                     },
                     onSubmitted: (value) {
-                      setState(() {
-                        visible = true;
-                      });
+                      if(grassocorporeo.text.isEmpty || pesocorporeo.text.isEmpty || pesocorporeo.text == '0')  {
+                        grassocorporeo.text='0';
+                        pesocorporeo.text= loaddata()[0];
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        const snackBar = SnackBar(
+                          content: Text('Parametro errato o nullo'),
+                        );
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(snackBar);
+                      }else{
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        setState(() {
+                          visible = true;
+                        });
+                      }
                     },
                     obscureText: false,
                     decoration: InputDecoration(
@@ -153,7 +165,8 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                   TextField(
                     controller: pesocorporeo,
                     onEditingComplete: (){
-                      if(pesocorporeo.text.isEmpty || pesocorporeo.text == '0')  {
+                      if(pesocorporeo.text.isEmpty || pesocorporeo.text == '0'|| grassocorporeo.text.isEmpty)  {
+                        grassocorporeo.text='0';
                         pesocorporeo.text= loaddata()[0];
                         FocusManager.instance.primaryFocus?.unfocus();
                         const snackBar = SnackBar(
@@ -166,9 +179,20 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                       }
                     },
                     onSubmitted: (value) {
-                      setState(() {
-                        visible = true;
-                      });
+                      if(pesocorporeo.text.isEmpty || pesocorporeo.text == '0')  {
+                        pesocorporeo.text= loaddata()[0];
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        const snackBar = SnackBar(
+                          content: Text('Parametro errato o nullo'),
+                        );
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(snackBar);
+                      }else{
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        setState(() {
+                          visible = true;
+                        });
+                      }
                     },
                     obscureText: false,
                     decoration: InputDecoration(
