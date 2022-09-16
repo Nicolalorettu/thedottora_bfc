@@ -22,17 +22,27 @@ class calcolometabolismobasale extends StatefulWidget {
 
 class _calcolometabolismobasale extends State<calcolometabolismobasale> {
   bool visible = false;
+  String weight;
 
-  List<String> loaddata() {
+
+
+  static List<String> loaddata() {
     var file = File("/storage/emulated/0/Download/Nutritool/data.txt");
     List<String> data = file.readAsLinesSync();
     return data;
   }
+  _calcolometabolismobasale() : weight = constrweight;
+  static String get constrweight => loaddata()[0];
+
   TextEditingController grassocorporeo = TextEditingController(text: '0');
+  TextEditingController pesocorporeo = TextEditingController(text: constrweight);
+  //
   List<double> KatchMcArdleFormula(){
     double bmr = 0;
-    if(double.parse(grassocorporeo.text)!=0){
-      bmr = constantskmunisex[0]+(constantskmunisex[1]*(constantskmunisex[2]-(double.parse(grassocorporeo.text)/100)))*double.parse(loaddata()[0]);
+
+    if(double.parse(grassocorporeo.text)!=0 ){
+      bmr = constantskmunisex[0]+(constantskmunisex[1]*(constantskmunisex[2]-(double.parse(grassocorporeo.text)/100)))*double.parse(pesocorporeo.text);
+
     }else{
       bmr = 0;
     }
@@ -126,7 +136,7 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                         color: myFocusNode.hasFocus ? Colors.black45 : Colors.black45,
                         backgroundColor: myFocusNode.hasFocus ? Colors.white : Colors.white,
                       ),
-                      helperText: 'Valore manuale in percentuale',
+                      helperText: 'Valore in percentuale',
                       helperStyle: (TextStyle(color: Colors.white)),
                     ),
                     keyboardType: TextInputType.number,
@@ -134,20 +144,58 @@ class _calcolometabolismobasale extends State<calcolometabolismobasale> {
                     maxLines: 1,
                     minLines: 1,
                   )
+
               ),
             ),
-            //Padding(
-            //  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal:100.0),
-            //  child: ElevatedButton(
-            //      onPressed: () => {
-            //      setState(() {
-            //      visible = true;
-            //      }),
+            Container(
+              margin: EdgeInsets.symmetric(vertical:30.0, horizontal:100.0),
+              child:(
+                  TextField(
+                    controller: pesocorporeo,
+                    onEditingComplete: (){
+                      if(pesocorporeo.text.isEmpty || pesocorporeo.text == '0')  {
+                        pesocorporeo.text= loaddata()[0];
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        const snackBar = SnackBar(
+                          content: Text('Parametro errato o nullo'),
+                        );
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(snackBar);
+                      }else{
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      }
+                    },
+                    onSubmitted: (value) {
+                      setState(() {
+                        visible = true;
+                      });
+                    },
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: const BorderSide(color: Colors.cyan, width: 1.0),
+                      ),
+                      border: OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.symmetric(vertical:20.0, horizontal:10.0),
+                      labelText: 'Peso Paziente',
+                      labelStyle: TextStyle(
+                        color: myFocusNode.hasFocus ? Colors.black45 : Colors.black45,
+                        backgroundColor: myFocusNode.hasFocus ? Colors.white : Colors.white,
+                      ),
+                      helperText: 'Valore in Kg',
+                      helperStyle: (TextStyle(color: Colors.white)),
+                    ),
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    minLines: 1,
+                  )
 
-            //      },
-            //    child: const Text('Calcola BMR',style: TextStyle(color: Colors.white)),
-            //  ),
-           // ),
+              ),
+            ),
             Visibility(
               visible: visible,
               child:

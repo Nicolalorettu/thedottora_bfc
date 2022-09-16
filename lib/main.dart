@@ -51,7 +51,7 @@ class TdBfc extends StatelessWidget {
               '/third': (context) => const calcolograssocorporeo(),
               '/fourth': (context) => const calcolometabolismobasale(),
             },
-            home: const MyHomePage(title: 'NutriTool 2.0b'),
+            home: const MyHomePage(title: 'NutriTool 2.0c'),
           );
   }
 }
@@ -99,23 +99,23 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Container(
               height: 470.0,
-              width: 2048.0,
+              width: double.infinity, //2048.0,
               margin: EdgeInsets.symmetric(vertical:10.0, horizontal:30.0),
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/images/Home.png'),
-                      fit: BoxFit.fill,
+                      fit: BoxFit.fitWidth,
                     ),
                   ),
             ),
             Container(
               height: 190.0,
-              width: 2048.0,
+              width: double.infinity, //2048.0,
               margin: EdgeInsets.symmetric(vertical:10.0, horizontal:30.0),
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/texthome.png'),
-                  fit: BoxFit.fill,
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ),
